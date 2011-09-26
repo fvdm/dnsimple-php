@@ -185,7 +185,7 @@ class DNSimple
 	}
 	
 	// Get one contact details
-	final public final public function contacts_show( $id )
+	final public function contacts_show( $id )
 	{
 		$contact = $this->http_call( 'GET', '/contacts/'. $id );
 		return $contact['contact'] ? $contact['contact'] : false;
