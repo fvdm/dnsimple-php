@@ -2,9 +2,9 @@
 class DNSimple
 {
 	# API basics
-	public $url		= 'https://dnsimple.com';					# Base URL for API calls
+	public $url		= 'https://api.dnsimple.com/v1';				# Base URL for API calls
 	public $http_iface	= '';								# Outbound network interface or IP
-	public $http_agent	= 'DNSimple-PHP/1.0.0 (https://github.com/fvdm/dnsimple-php)';	# Outbound user agent string
+	public $http_agent	= 'DNSimple-PHP/1.1.0 (https://github.com/fvdm/dnsimple-php)';	# Outbound user agent string
 	public $http_timeout	= 8;								# Connect and wait timeout
 	
 	# Set raw body, transfer info, request/reponse headers in $this->http
