@@ -57,7 +57,6 @@ class DNSimple
 	final public function templates_delete( $ref )
 	{
 		$tmp = $this->http_call( 'DELETE', '/templates/'. $ref );
-		return $tmp['status'] == 'deleted' ? true : false;
 	}
 	
 	// Apply DNS template to domain
@@ -126,7 +125,7 @@ class DNSimple
 	final public function dns_delete( $domain, $id )
 	{
 		$del = $this->http_call( 'DELETE', '/domains/'. $domain .'/records/'. $id );
-		return $del['status'] == 'deleted' ? true : true;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Create DNS record
@@ -220,7 +219,7 @@ class DNSimple
 	final public function contacts_delete( $id )
 	{
 		$c = $this->http_call( 'DELETE', '/contacts/'. $id );
-		return $c['status'] == 'deleted' ? true : false;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Find contact by field, keyword
@@ -301,7 +300,7 @@ class DNSimple
 	final public function domains_delete( $domain )
 	{
 		$c = $this->http_call( 'DELETE', '/domains/'. $domain );
-		return $c['status'] == 'deleted' ? true : false;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Find domains by keyword
