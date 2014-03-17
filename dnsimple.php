@@ -2,9 +2,9 @@
 class DNSimple
 {
 	# API basics
-	public $url		= 'https://dnsimple.com';					# Base URL for API calls
+	public $url		= 'https://api.dnsimple.com/v1';				# Base URL for API calls
 	public $http_iface	= '';								# Outbound network interface or IP
-	public $http_agent	= 'DNSimple-PHP/1.0.0 (https://github.com/fvdm/dnsimple-php)';	# Outbound user agent string
+	public $http_agent	= 'DNSimple-PHP/1.1.0 (https://github.com/fvdm/dnsimple-php)';	# Outbound user agent string
 	public $http_timeout	= 8;								# Connect and wait timeout
 	
 	# Set raw body, transfer info, request/reponse headers in $this->http
@@ -57,7 +57,6 @@ class DNSimple
 	final public function templates_delete( $ref )
 	{
 		$tmp = $this->http_call( 'DELETE', '/templates/'. $ref );
-		return $tmp['status'] == 'deleted' ? true : false;
 	}
 	
 	// Apply DNS template to domain
@@ -126,7 +125,7 @@ class DNSimple
 	final public function dns_delete( $domain, $id )
 	{
 		$del = $this->http_call( 'DELETE', '/domains/'. $domain .'/records/'. $id );
-		return $del['status'] == 'deleted' ? true : true;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Create DNS record
@@ -220,7 +219,7 @@ class DNSimple
 	final public function contacts_delete( $id )
 	{
 		$c = $this->http_call( 'DELETE', '/contacts/'. $id );
-		return $c['status'] == 'deleted' ? true : false;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Find contact by field, keyword
@@ -301,7 +300,7 @@ class DNSimple
 	final public function domains_delete( $domain )
 	{
 		$c = $this->http_call( 'DELETE', '/domains/'. $domain );
-		return $c['status'] == 'deleted' ? true : false;
+		return $this->http['success'] == 'yes' ? true : false;
 	}
 	
 	// Find domains by keyword
