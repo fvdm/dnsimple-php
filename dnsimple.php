@@ -407,14 +407,14 @@ class DNSimple
 	final private function http_call( $method='GET', $path, $vars=false )
 	{
 		# init
-		$q = '';
+		$query = '';
 		$this->http_responseheaders = array();
 		
 		# send headers
 		$send_headers[] = 'Accept: application/json';
 		
-		$c = curl_init();
-		$a = array(
+		$curl = curl_init();
+		$opts = array(
 			CURLOPT_RETURNTRANSFER		=>	true,
 			CURLOPT_TIMEOUT			=>	$this->http_timeout,
 			CURLOPT_CONNECTTIMEOUT		=>	$this->http_timeout,
@@ -433,7 +433,7 @@ class DNSimple
 		# outbound interface (1.2.3.4, eth0, wn1)
 		if( !empty( $this->http_iface ) )
 		{
-			$a[CURLOPT_INTERFACE]		=	$this->http_iface;
+			$opts[CURLOPT_INTERFACE]	=	$this->http_iface;
 		}
 		
 		# method
@@ -450,18 +450,18 @@ class DNSimple
 			default:
 				if( $vars )
 				{
-					$q = '?'. http_build_query( $vars );
+					$query = '?'. http_build_query( $vars );
 				}
 				break;
 		}
 		
 		# url
-		$a[CURLOPT_URL]				=	$this->url . $path . $q;
+		$opts[CURLOPT_URL]				=	$this->url . $path . $query;
 		
 		# execute
-		curl_setopt_array( $c, $a );
-		$result = curl_exec( $c );
-		$this->http['info'] = curl_getinfo( $c );
+		curl_setopt_array( $curl, $opts );
+		$result = curl_exec( $curl );
+		$this->http['info'] = curl_getinfo( $curl );
 		
 		# validate
 		$this->http['success'] = substr( $this->http['info']['http_code'], 0, 1 ) == 2 ? 'yes' : 'no';
@@ -471,13 +471,13 @@ class DNSimple
 		{
 			$this->http['raw'] = $result;
 			$this->http['response_headers'] = $this->http_responseheaders;
-			$this->http['error_str'] = curl_error( $c );
-			$this->http['error_code'] = curl_errno( $c );
+			$this->http['error_str'] = curl_error( $curl );
+			$this->http['error_code'] = curl_errno( $curl );
 			print_r($this->http);
 		}
 		
 		# close connection
-		curl_close( $c );
+		curl_close( $curl );
 		
 		# return decoded body
 		$result = json_decode( trim( $result ), true );
