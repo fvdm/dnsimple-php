@@ -484,4 +484,3 @@ class DNSimple
 		return $result;
 	}
 }
-?>
