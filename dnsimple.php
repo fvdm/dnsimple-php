@@ -465,22 +465,22 @@ class DNSimple
 		
 		# validate
 		$this->http['success'] = substr( $this->http['info']['http_code'], 0, 1 ) == 2 ? 'yes' : 'no';
+		$result = json_decode( trim( $result ), true );
 		
 		# store debug data
-		if(debug)
+		if($this->debug)
 		{
-			$this->http['raw'] = $result;
-			$this->http['response_headers'] = $this->http_responseheaders;
-			$this->http['error_str'] = curl_error( $curl );
-			$this->http['error_code'] = curl_errno( $curl );
-			print_r($this->http);
+			$result['debug'] = array();
+			$result['debug']['raw'] = $result;
+			$result['debug']['response_headers'] = $this->http_responseheaders;
+			$result['debug']['error_str'] = curl_error( $curl );
+			$result['debug']['error_code'] = curl_errno( $curl );
 		}
 		
 		# close connection
 		curl_close( $curl );
 		
 		# return decoded body
-		$result = json_decode( trim( $result ), true );
 		return $result;
 	}
 }
