@@ -428,7 +428,7 @@ class DNSimple
       
       case 'GET':
       default:
-        if( $vars )
+        if( !empty( $vars ) )
         {
           $query = '?'. http_build_query( $vars );
         }
