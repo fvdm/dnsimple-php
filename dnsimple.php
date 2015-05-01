@@ -82,7 +82,7 @@ class DNSimple
   final public function templates_records_show( $ref, $id )
   {
     $result = $this->http_call( 'GET', '/templates/'. $ref .'/template_records/'. $id );
-    return $resule['dns_template_record']['id'] ? $result['dns_template_record'] : false;
+    return $result['dns_template_record']['id'] ? $result['dns_template_record'] : false;
   }
 
   // Create DNS template record
@@ -159,6 +159,7 @@ class DNSimple
   // List contacts
   final public function contacts_list()
   {
+    $result = array();
     $contacts = $this->http_call( 'GET', '/contacts' );
     if( $contacts[0] )
     {
@@ -255,6 +256,7 @@ class DNSimple
 
   final public function domains_transfer( $domain, $contactID, $authcode=false )
   {
+    $arr = array();
     $arr['domain[name]'] = $domain;
     $arr['domain[registrant_id]'] = $contactID;
     if( $authcode )
@@ -386,7 +388,7 @@ class DNSimple
   }
 
   // Talk to API
-  final private function http_call( $method='GET', $path, $vars=false )
+  final private function http_call( $method='GET', $path, $vars=array() )
   {
     $query = '';
     $this->http_responseheaders = array();
