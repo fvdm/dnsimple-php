@@ -213,6 +213,10 @@ class DNSimple
 
   // Find contact by field, keyword
   // $field can be like create_contact() + id, created_at, updated_at, user_id
+
+  /**
+   * @param string $field
+   */
   final public function contacts_find_byField ($field, $keyword)
   {
     $contacts = $this->contacts_list ();
@@ -388,6 +392,10 @@ class DNSimple
   }
 
   // Talk to API
+
+  /**
+   * @param string $path
+   */
   final private function http_call ($method = 'GET', $path, $vars = array ())
   {
     $query = '';
