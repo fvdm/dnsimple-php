@@ -15,131 +15,131 @@ class DNSimple
   // TEMPLATES
 
   // List DNS templates
-  final public function templates_list()
+  final public function templates_list ()
   {
-    $list = $this->http_call( 'GET', '/templates' );
-    $result = array();
-    if( $list[0]['dns_template'] )
+    $list = $this->http_call ('GET', '/templates');
+    $result = array ();
+    if ($list[0]['dns_template'])
     {
-      foreach( $list as $tmp )
+      foreach ($list as $tmp)
       {
-        $result[ $tmp['dns_template']['short_name'] ] = $tmp['dns_template'];
+        $result[$tmp['dns_template']['short_name']] = $tmp['dns_template'];
       }
     }
     return $result;
   }
 
   // Show DNS template
-  final public function templates_show( $ref )
+  final public function templates_show ($ref)
   {
-    $result = $this->http_call( 'GET', '/templates/'. $ref );
+    $result = $this->http_call ('GET', '/templates/' . $ref);
     return $result['dns_template'] ? $result['dns_template'] : false;
   }
 
   // Create DNS template
-  final public function templates_create( $arr )
+  final public function templates_create ($arr)
   {
-    $vars = array();
-    foreach( $arr as $k => $v )
+    $vars = array ();
+    foreach ($arr as $k => $v)
     {
-      $vars['dns_template['. $k .']'] = $v;
+      $vars['dns_template[' . $k . ']'] = $v;
     }
-    $result = $this->http_call( 'POST', '/templates', $vars );
+    $result = $this->http_call ('POST', '/templates', $vars);
     return $result['dns_template'] ? $result['dns_template'] : false;
   }
 
   // Delete DNS template
-  final public function templates_delete( $ref )
+  final public function templates_delete ($ref)
   {
-    return $this->http_call( 'DELETE', '/templates/'. $ref );
+    return $this->http_call ('DELETE', '/templates/' . $ref);
   }
 
   // Apply DNS template to domain
-  final public function templates_apply( $ref, $domain )
+  final public function templates_apply ($ref, $domain)
   {
-    return $this->http_call( 'POST', '/domains/'. $domain .'/templates/'. $ref .'/apply' );
+    return $this->http_call ('POST', '/domains/' . $domain . '/templates/' . $ref . '/apply');
   }
 
 
   // Templates Records
 
   // List DNS template records
-  final public function templates_records_list( $ref )
+  final public function templates_records_list ($ref)
   {
-    $result = array();
-    $records = $this->http_call( 'GET', '/templates/'. $ref .'/template_records' );
-    if( $records[0]['dns_template_record']['id'] )
+    $result = array ();
+    $records = $this->http_call ('GET', '/templates/' . $ref . '/template_records');
+    if ($records[0]['dns_template_record']['id'])
     {
-      foreach( $records as $rec )
+      foreach ($records as $rec)
       {
-        $result[ $rec['dns_template_record']['id'] ] = $rec['dns_template_record'];
+        $result[$rec['dns_template_record']['id']] = $rec['dns_template_record'];
       }
     }
     return $result;
   }
 
   // Show DNS template record
-  final public function templates_records_show( $ref, $id )
+  final public function templates_records_show ($ref, $id)
   {
-    $result = $this->http_call( 'GET', '/templates/'. $ref .'/template_records/'. $id );
+    $result = $this->http_call ('GET', '/templates/' . $ref . '/template_records/' . $id);
     return $result['dns_template_record']['id'] ? $result['dns_template_record'] : false;
   }
 
   // Create DNS template record
-  final public function templates_records_create( $ref, $arr )
+  final public function templates_records_create ($ref, $arr)
   {
-    $vars = array();
-    foreach( $arr as $k => $v )
+    $vars = array ();
+    foreach ($arr as $k => $v)
     {
-      $vars['dns_template_record['. $k .']'] = $v;
+      $vars['dns_template_record[' . $k . ']'] = $v;
     }
 
-    return $this->http_call( 'POST', '/templates/'. $ref .'/template_records', $vars );
+    return $this->http_call ('POST', '/templates/' . $ref . '/template_records', $vars);
   }
 
 
   // DNS
 
   // Update DNS record
-  final public function dns_update( $domain, $id, $arr )
+  final public function dns_update ($domain, $id, $arr)
   {
-    foreach( $arr as $k => $v )
+    foreach ($arr as $k => $v)
     {
-      $vars[ 'record['. $k .']' ] = $v;
+      $vars['record[' . $k . ']'] = $v;
     }
-    $result = $this->http_call( 'PUT', '/domains/'. $domain .'/records/'. $id, $vars );
+    $result = $this->http_call ('PUT', '/domains/' . $domain . '/records/' . $id, $vars);
     return $result['record']['id'] ? $result['record'] : false;
   }
 
   // Delete DNS record
-  final public function dns_delete( $domain, $id )
+  final public function dns_delete ($domain, $id)
   {
-    $this->http_call( 'DELETE', '/domains/'. $domain .'/records/'. $id );
+    $this->http_call ('DELETE', '/domains/' . $domain . '/records/' . $id);
     return $this->http['success'] == 'yes' ? true : false;
   }
 
   // Create DNS record
   // REQ: name, record_type, content
   // OPT: ttl, prio
-  final public function dns_create( $domain, $arr )
+  final public function dns_create ($domain, $arr)
   {
-    foreach( $arr as $k => $v )
+    foreach ($arr as $k => $v)
     {
-      $vars[ 'record['. $k .']' ] = $v;
+      $vars['record[' . $k . ']'] = $v;
     }
-    $result = $this->http_call( 'POST', '/domains/'. $domain .'/records', $vars );
+    $result = $this->http_call ('POST', '/domains/' . $domain . '/records', $vars);
     return $result['record']['id'] ? $result['record'] : false;
   }
 
   // List DNS records for domain
-  final public function dns_list( $domain )
+  final public function dns_list ($domain)
   {
-    $dns = $this->http_call( 'GET', '/domains/'. $domain .'/records' );
-    if( $dns[0]['record']['id'] )
+    $dns = $this->http_call ('GET', '/domains/' . $domain . '/records');
+    if ($dns[0]['record']['id'])
     {
-      foreach( $dns as $rec )
+      foreach ($dns as $rec)
       {
-        $records[ $rec['record']['id'] ] = $rec['record'];
+        $records[$rec['record']['id']] = $rec['record'];
       }
       return $records;
     }
@@ -147,9 +147,9 @@ class DNSimple
   }
 
   // Get one DNS record details
-  final public function dns_show( $domain, $id )
+  final public function dns_show ($domain, $id)
   {
-    $record = $this->http_call( 'GET', '/domains/'. $domain .'/records/'. $id );
+    $record = $this->http_call ('GET', '/domains/' . $domain . '/records/' . $id);
     return $record['record']['id'] ? $record['record'] : false;
   }
 
@@ -157,15 +157,15 @@ class DNSimple
   // CONTACTS
 
   // List contacts
-  final public function contacts_list()
+  final public function contacts_list ()
   {
-    $result = array();
-    $contacts = $this->http_call( 'GET', '/contacts' );
-    if( $contacts[0] )
+    $result = array ();
+    $contacts = $this->http_call ('GET', '/contacts');
+    if ($contacts[0])
     {
-      foreach( $contacts as $ck => $cd )
+      foreach ($contacts as $ck => $cd)
       {
-        $result[ $cd['contact']['id'] ] = $cd['contact'];
+        $result[$cd['contact']['id']] = $cd['contact'];
       }
       return $result;
     }
@@ -173,9 +173,9 @@ class DNSimple
   }
 
   // Get one contact details
-  final public function contacts_show( $id )
+  final public function contacts_show ($id)
   {
-    $contact = $this->http_call( 'GET', '/contacts/'. $id );
+    $contact = $this->http_call ('GET', '/contacts/' . $id);
     return $contact['contact'] ? $contact['contact'] : false;
   }
 
@@ -183,45 +183,45 @@ class DNSimple
   // REQ: first_name, last_name, address1, city, state_province, postal_code, country, email_address, phone
   // OPT: organization_name, job_title, fax, phone_ext, label
   //      organization_name requires job_title
-  final public function contacts_create( $arr )
+  final public function contacts_create ($arr)
   {
-    foreach( $arr as $k => $v )
+    foreach ($arr as $k => $v)
     {
-      $array['contact['. $k .']'] = $v;
+      $array['contact[' . $k . ']'] = $v;
     }
-    $result = $this->http_call( 'POST', '/contacts', $array );
+    $result = $this->http_call ('POST', '/contacts', $array);
     return $result['contact']['id'] ? $result['contact'] : false;
   }
 
   // Update contact
-  final public function contacts_update( $id, $arr )
+  final public function contacts_update ($id, $arr)
   {
-    foreach( $arr as $k => $v )
+    foreach ($arr as $k => $v)
     {
-      $array['contact['. $k .']'] = $v;
+      $array['contact[' . $k . ']'] = $v;
     }
-    $contact = $this->http_call( 'PUT', '/contacts/'. $id, $array );
+    $contact = $this->http_call ('PUT', '/contacts/' . $id, $array);
     return $this->http['success'] == 'yes' ? true : false;
   }
 
   // Delete contact
-  final public function contacts_delete( $id )
+  final public function contacts_delete ($id)
   {
-    $this->http_call( 'DELETE', '/contacts/'. $id );
+    $this->http_call ('DELETE', '/contacts/' . $id);
     return $this->http['success'] == 'yes' ? true : false;
   }
 
   // Find contact by field, keyword
   // $field can be like create_contact() + id, created_at, updated_at, user_id
-  final public function contacts_find_byField( $field, $keyword )
+  final public function contacts_find_byField ($field, $keyword)
   {
-    $contacts = $this->contacts_list();
-    $result = array();
-    foreach( $contacts as $id => $contact )
+    $contacts = $this->contacts_list ();
+    $result = array ();
+    foreach ($contacts as $id => $contact)
     {
-      if( stristr( $contact[ $field ], $keyword ) )
+      if (stristr ($contact[$field], $keyword))
       {
-        $result[ $id ] = $contact;
+        $result[$id] = $contact;
       }
     }
     return $result;
@@ -231,53 +231,53 @@ class DNSimple
   // DOMAINS
 
   // List domains, $simple returns only array with domainnames
-  final public function domains_list( $simple=false )
+  final public function domains_list ($simple = false)
   {
-    $domains = $this->http_call( 'GET', '/domains' );
-    if( $domains[0]['domain'] )
+    $domains = $this->http_call ('GET', '/domains');
+    if ($domains[0]['domain'])
     {
-      foreach( $domains as $dk => $dd )
+      foreach ($domains as $dk => $dd)
       {
-        $res[ $dd['domain']['name'] ] = $simple ? $dd['domain']['name'] : $dd['domain'];
+        $res[$dd['domain']['name']] = $simple ? $dd['domain']['name'] : $dd['domain'];
       }
       return $res;
     }
     return $domains;
   }
 
-  final public function domains_register( $domain, $contactID )
+  final public function domains_register ($domain, $contactID)
   {
-    $domain = $this->http_call( 'POST', '/domain_registrations', array(
+    $domain = $this->http_call ('POST', '/domain_registrations', array (
       'domain[name]' => $domain,
       'domain[registrant_id]' => $contactID
     ));
     return $domain;
   }
 
-  final public function domains_transfer( $domain, $contactID, $authcode=false )
+  final public function domains_transfer ($domain, $contactID, $authcode = false)
   {
-    $arr = array();
+    $arr = array ();
     $arr['domain[name]'] = $domain;
     $arr['domain[registrant_id]'] = $contactID;
-    if( $authcode )
+    if ($authcode)
     {
       $arr['domain[auth_info]'] = $authcode;
     }
-    $domain = $this->http_call( 'POST', '/domain_transfers', $arr );
+    $domain = $this->http_call ('POST', '/domain_transfers', $arr);
     return $domain;
   }
 
   // Get domain
-  final public function domains_show( $domain )
+  final public function domains_show ($domain)
   {
-    $domain = $this->http_call( 'GET', '/domains/'. $domain );
+    $domain = $this->http_call ('GET', '/domains/' . $domain);
     return $domain['domain'] ? $domain['domain'] : false;
   }
 
   // Create domain
-  final public function domains_create( $domain )
+  final public function domains_create ($domain)
   {
-    $res = $this->http_call( 'POST', '/domains', array(
+    $res = $this->http_call ('POST', '/domains', array (
       'domain[name]' => $domain
     ));
 
@@ -285,71 +285,71 @@ class DNSimple
   }
 
   // Delete domain
-  final public function domains_delete( $domain )
+  final public function domains_delete ($domain)
   {
-    $this->http_call( 'DELETE', '/domains/'. $domain );
+    $this->http_call ('DELETE', '/domains/' . $domain);
     return $this->http['success'] == 'yes' ? true : false;
   }
 
   // Find domains by keyword
-  final public function domains_find( $keyword )
+  final public function domains_find ($keyword)
   {
-    $domains = $this->domains_list();
-    $result = array();
-    foreach( $domains as $name => $dom )
+    $domains = $this->domains_list ();
+    $result = array ();
+    foreach ($domains as $name => $dom)
     {
-      if( stristr( $name, $keyword ) )
+      if (stristr ($name, $keyword))
       {
-        $result[ $name ] = $dom;
+        $result[$name] = $dom;
       }
     }
     return $result;
   }
 
   // Find domains bt TLD
-  final public function domains_find_byTLD( $tld )
+  final public function domains_find_byTLD ($tld)
   {
-    $domains = $this->domains_list();
-    $result = array();
-    foreach( $domains as $name => $dom )
+    $domains = $this->domains_list ();
+    $result = array ();
+    foreach ($domains as $name => $dom)
     {
-      if( preg_match( '/\.'. $tld .'$/i', $name ) )
+      if (preg_match ('/\.' . $tld . '$/i', $name))
       {
-        $result[ $name ] = $dom;
+        $result[$name] = $dom;
       }
     }
     return $result;
   }
 
   // Find domains by registrant ID
-  final public function domains_find_byRegistrantID( $registrant )
+  final public function domains_find_byRegistrantID ($registrant)
   {
-    $domains = $this->domains_list();
-    $result = array();
-    foreach( $domains as $name => $dom )
+    $domains = $this->domains_list ();
+    $result = array ();
+    foreach ($domains as $name => $dom)
     {
-      if( $dom['registrant_id'] == $registrant )
+      if ($dom['registrant_id'] == $registrant)
       {
-        $result[ $name ] = $dom;
+        $result[$name] = $dom;
       }
     }
     return $result;
   }
 
   // Find domains by registrant name
-  final public function domains_find_byContactName( $name )
+  final public function domains_find_byContactName ($name)
   {
-    $result = array();
-    $domains = $this->domains_list();
-    $contacts = $this->contacts_find_byField( 'last_name', $name );
+    $result = array ();
+    $domains = $this->domains_list ();
+    $contacts = $this->contacts_find_byField ('last_name', $name);
   
-    foreach( $contacts as $cid => $contact )
+    foreach ($contacts as $cid => $contact)
     {
-      foreach( $domains as $name => $dom )
+      foreach ($domains as $name => $dom)
       {
-        if( $dom['registrant_id'] == $cid )
+        if ($dom['registrant_id'] == $cid)
         {
-          $result[ $name ] = $dom;
+          $result[$name] = $dom;
         }
       }
     }
@@ -360,42 +360,42 @@ class DNSimple
   // UTILITIES
 
   // curl header callback
-  final private function http_headers( $c, $headers )
+  final private function http_headers ($c, $headers)
   {
-    $headers2 = explode( "\n", $headers );
-    foreach( $headers2 as $head )
+    $headers2 = explode ("\n", $headers);
+    foreach ($headers2 as $head)
     {
-      $head = trim( $head );
-      $head = explode( ': ', $head, 2 );
-      $key = trim( $head[0] );
-      $val = !empty($head[1]) ? trim( $head[1] ) : '';
+      $head = trim ($head);
+      $head = explode (': ', $head, 2);
+      $key = trim ($head[0]);
+      $val = !empty($head[1]) ? trim ($head[1]) : '';
   
-      if( !empty( $key ) )
+      if (!empty($key))
       {
-        if( empty( $val ) )
+        if (empty($val))
         {
           $this->http_responseheaders[] = $head[0];
         }
         else
         {
-          $this->http_responseheaders[ $key ] = trim( $val );
+          $this->http_responseheaders[$key] = trim ($val);
         }
       }
     }
 
     // required for callback
-    return strlen( $headers );
+    return strlen ($headers);
   }
 
   // Talk to API
-  final private function http_call( $method='GET', $path, $vars=array() )
+  final private function http_call ($method = 'GET', $path, $vars = array ())
   {
     $query = '';
-    $this->http_responseheaders = array();
+    $this->http_responseheaders = array ();
     $send_headers[] = 'Accept: application/json';
 
-    $curl = curl_init();
-    $opts = array(
+    $curl = curl_init ();
+    $opts = array (
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_TIMEOUT => $this->http_timeout,
       CURLOPT_CONNECTTIMEOUT => $this->http_timeout,
@@ -403,21 +403,21 @@ class DNSimple
       CURLOPT_CUSTOMREQUEST => $method,
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-      CURLOPT_USERPWD => $this->username .':'. $this->password,
+      CURLOPT_USERPWD => $this->username . ':' . $this->password,
       CURLOPT_HEADER => false,
       CURLINFO_HEADER_OUT => true,
-      CURLOPT_HEADERFUNCTION => array( $this, 'http_headers' ),
+      CURLOPT_HEADERFUNCTION => array ($this, 'http_headers'),
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_0,
       CURLOPT_HTTPHEADER => $send_headers
     );
 
     # outbound interface (1.2.3.4, eth0, wn1)
-    if( !empty( $this->http_iface ) )
+    if (!empty($this->http_iface))
     {
       $opts[CURLOPT_INTERFACE] = $this->http_iface;
     }
 
-    switch( $method )
+    switch ($method)
     {
       case 'POST':
       case 'PUT':
@@ -428,32 +428,32 @@ class DNSimple
       
       case 'GET':
       default:
-        if( !empty( $vars ) )
+        if (!empty($vars))
         {
-          $query = '?'. http_build_query( $vars );
+          $query = '?' . http_build_query ($vars);
         }
       break;
     }
 
     $opts[CURLOPT_URL] = $this->url . $path . $query;
 
-    curl_setopt_array( $curl, $opts );
-    $result = curl_exec( $curl );
-    $this->http['info'] = curl_getinfo( $curl );
+    curl_setopt_array ($curl, $opts);
+    $result = curl_exec ($curl);
+    $this->http['info'] = curl_getinfo ($curl);
 
-    $this->http['success'] = substr( $this->http['info']['http_code'], 0, 1 ) == 2 ? 'yes' : 'no';
-    $result = json_decode( trim( $result ), true );
+    $this->http['success'] = substr ($this->http['info']['http_code'], 0, 1) == 2 ? 'yes' : 'no';
+    $result = json_decode (trim ($result), true);
 
-    if($this->debug)
+    if ($this->debug)
     {
-      $result['debug'] = array();
+      $result['debug'] = array ();
       $result['debug']['raw'] = $result;
       $result['debug']['response_headers'] = $this->http_responseheaders;
-      $result['debug']['error_str'] = curl_error( $curl );
-      $result['debug']['error_code'] = curl_errno( $curl );
+      $result['debug']['error_str'] = curl_error ($curl);
+      $result['debug']['error_code'] = curl_errno ($curl);
     }
 
-    curl_close( $curl );
+    curl_close ($curl);
     return $result;
   }
 }
