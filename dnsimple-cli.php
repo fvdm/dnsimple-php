@@ -1,13 +1,13 @@
 #!/usr/bin/php
 <?php
-define('debug', false);
+define ('debug', false);
 
-if(debug)
+if (debug)
 {
-  ini_set('display_errors', 1);
-  date_default_timezone_set( 'Europe/Amsterdam');
+  ini_set ('display_errors', 1);
+  date_default_timezone_set ('Europe/Amsterdam');
 }
-error_reporting( E_ALL ^ E_NOTICE );
+error_reporting (E_ALL ^ E_NOTICE);
 
 # REQUIRED !!
 require 'dnsimple.php';
@@ -15,20 +15,20 @@ require 'dnsimple.php';
 $d = new DNSimple;
 $d->debug = false;
 
-switch( $argv[1] )
+switch ($argv[1])
 {
   # TEMPLATES
   case 'templates':
-    switch( $argv[2] )
+    switch ($argv[2])
     {
-      case 'list':	$r = $d->templates_list();				break;	# LIST
-      case 'show':	$r = $d->templates_show( $argv[3] );			break;	# SHOW
-      case 'delete':	$r = $d->templates_delete( $argv[3] );			break;	# DELETE
-      case 'apply':	$r = $d->templates_apply( $argv[3], $argv[4] );		break;	# APPLY
+      case 'list':	$r = $d->templates_list (); break; # LIST
+      case 'show':	$r = $d->templates_show ($argv[3]); break; # SHOW
+      case 'delete':	$r = $d->templates_delete ($argv[3]); break; # DELETE
+      case 'apply':	$r = $d->templates_apply ($argv[3], $argv[4]); break; # APPLY
 			
       # ADD
       case 'add':
-        $r = $d->templates_create( array(
+        $r = $d->templates_create (array (
           'name'		=>	$argv[3],
           'short_name'	=>	$argv[4],
           'description'	=>	(string) $argv[5]
@@ -37,28 +37,28 @@ switch( $argv[1] )
 				
       # RECORDS
       case 'records':
-        switch( $argv[3] )
+        switch ($argv[3])
         {
-          case 'list':	$r = $d->templates_records_list( $argv[4] );		break;	# LIST
-          case 'show':	$r = $d->templates_records_show( $argv[4], $argv[5] );	break;	# SHOW
+          case 'list':	$r = $d->templates_records_list ($argv[4]); break; # LIST
+          case 'show':	$r = $d->templates_records_show ($argv[4], $argv[5]); break; # SHOW
 					
           # ADD
           case 'add':
-            $a = array(
+            $a = array (
               'name'		=>	$argv[5],
               'record_type'	=>	$argv[6],
               'ttl'		=>	3600
             );
-            if( $argv[6] == 'MX' )
+            if ($argv[6] == 'MX')
             {
-              $a['content']	=	$argv[8];
-              $a['prio']	=	$argv[7];
+              $a['content'] = $argv[8];
+              $a['prio'] = $argv[7];
             }
             else
             {
-              $a['content']	=	$argv[7];
+              $a['content'] = $argv[7];
             }
-            $r = $d->templates_records_create( $argv[4], $a );
+            $r = $d->templates_records_create ($argv[4], $a);
             break;
         }
         break;
@@ -67,15 +67,15 @@ switch( $argv[1] )
 	
   # DNS
   case 'dns':
-    switch( $argv[2] )
+    switch ($argv[2])
     {
-      case 'delete':	$r = $d->dns_delete( $argv[3], $argv[4] );	break;	# DELETE
-      case 'show':	$r = $d->dns_show( $argv[3], $argv[4] );	break;	# SHOW
-      case 'list':	$r = $d->dns_list( $argv[3] );			break;	# LIST
+      case 'delete':	$r = $d->dns_delete ($argv[3], $argv[4]); break; # DELETE
+      case 'show':	$r = $d->dns_show ($argv[3], $argv[4]); break; # SHOW
+      case 'list':	$r = $d->dns_list ($argv[3]); break; # LIST
 			
       # UPDATE
       case 'update':
-        $r = $d->dns_update( $argv[3], $argv[4], array(
+        $r = $d->dns_update ($argv[3], $argv[4], array (
           'name'		=>	$argv[5],
           'record_type'	=>	$argv[6],
           'content'	=>	$argv[7],
@@ -86,7 +86,7 @@ switch( $argv[1] )
 			
       # ADD
       case 'add':
-        $r = $d->dns_create( $argv[3], array(
+        $r = $d->dns_create ($argv[3], array (
           'name'		=>	$argv[4],
           'record_type'	=>	$argv[5],
           'content'	=>	$argv[6],
@@ -97,10 +97,10 @@ switch( $argv[1] )
 			
       # DATE
       case 'date':
-        $r = $d->dns_create( $argv[3], array(
-          'name'		=>	'test'. date('His'),
+        $r = $d->dns_create ($argv[3], array (
+          'name'		=>	'test' . date ('His'),
           'record_type'	=>	'TXT',
-          'content'	=>	date('r')
+          'content'	=>	date ('r')
         ));
         break;
     }
@@ -108,24 +108,24 @@ switch( $argv[1] )
 		
   # DOMAINS
   case 'domains':
-    switch( $argv[2] )
+    switch ($argv[2])
     {
-      case 'add':	$r = $d->domains_create( $argv[3] );	break;	# ADD
-      case 'delete':	$r = $d->domains_delete( $argv[3] );	break;	# DELETE
-      case 'list':	$r = $d->domains_list();		break;	# LIST
-      case 'show':	$r = $d->domains_show( $argv[3] );	break;	# SHOW
+      case 'add':	$r = $d->domains_create ($argv[3]); break; # ADD
+      case 'delete':	$r = $d->domains_delete ($argv[3]); break; # DELETE
+      case 'list':	$r = $d->domains_list (); break; # LIST
+      case 'show':	$r = $d->domains_show ($argv[3]); break; # SHOW
 			
       # FIND
       case 'find':
-        if( $argv[3] == 'contact' )
+        if ($argv[3] == 'contact')
         {
           # by contact name
-          $r = $d->domains_find_byContactName( $argv[4] );
+          $r = $d->domains_find_byContactName ($argv[4]);
         }
         else
         {
           # by keyword
-          $r = $d->domains_find( $argv[3] );
+          $r = $d->domains_find ($argv[3]);
         }
         break;
     }
@@ -133,17 +133,17 @@ switch( $argv[1] )
 	
   # CONTACTS
   case 'contacts':
-    switch( $argv[2] )
+    switch ($argv[2])
     {
-      case 'list':	$r = $d->contacts_list();		break;	# LIST
-      case 'delete':	$r = $d->contacts_delete( $argv[3] );	break;	# DELETE
-      case 'show':	$r = $d->contacts_show( $argv[3] );	break;	# SHOW
+      case 'list':	$r = $d->contacts_list (); break; # LIST
+      case 'delete':	$r = $d->contacts_delete ($argv[3]); break; # DELETE
+      case 'show':	$r = $d->contacts_show ($argv[3]); break; # SHOW
 			
       # FIND
       case 'find':
         $field = $argv[4] ? $argv[3] : 'last_name';
         $keyword = $argv[4] ? $argv[4] : $argv[3];
-        $r = $d->contacts_find_byField( $field, $keyword );
+        $r = $d->contacts_find_byField ($field, $keyword);
         break;
 			
       # ADD
@@ -191,11 +191,11 @@ switch( $argv[1] )
 
 // dump
 echo "\n";
-print_r($r);
-if( $d->debug )
+print_r ($r);
+if ($d->debug)
 {
   echo "\n";
-  print_r($d->http);
+  print_r ($d->http);
 }
 echo "\n";
 ?>
