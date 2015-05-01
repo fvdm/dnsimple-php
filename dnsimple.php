@@ -32,8 +32,8 @@ class DNSimple
   // Show DNS template
   final public function templates_show( $ref )
   {
-    $tmp = $this->http_call( 'GET', '/templates/'. $ref );
-    return $tmp['dns_template'] ? $tmp['dns_template'] : false;
+    $result = $this->http_call( 'GET', '/templates/'. $ref );
+    return $result['dns_template'] ? $result['dns_template'] : false;
   }
 
   // Create DNS template
@@ -44,21 +44,20 @@ class DNSimple
     {
       $vars['dns_template['. $k .']'] = $v;
     }
-    $tmp = $this->http_call( 'POST', '/templates', $vars );
-    return $tmp['dns_template'] ? $tmp['dns_template'] : false;
+    $result = $this->http_call( 'POST', '/templates', $vars );
+    return $result['dns_template'] ? $result['dns_template'] : false;
   }
 
   // Delete DNS template
   final public function templates_delete( $ref )
   {
-    $tmp = $this->http_call( 'DELETE', '/templates/'. $ref );
+    return $this->http_call( 'DELETE', '/templates/'. $ref );
   }
 
   // Apply DNS template to domain
   final public function templates_apply( $ref, $domain )
   {
-    $tmp = $this->http_call( 'POST', '/domains/'. $domain .'/templates/'. $ref .'/apply' );
-    return $tmp;
+    return $this->http_call( 'POST', '/domains/'. $domain .'/templates/'. $ref .'/apply' );
   }
 
 
@@ -82,8 +81,8 @@ class DNSimple
   // Show DNS template record
   final public function templates_records_show( $ref, $id )
   {
-    $rec = $this->http_call( 'GET', '/templates/'. $ref .'/template_records/'. $id );
-    return $rec['dns_template_record']['id'] ? $rec['dns_template_record'] : false;
+    $result = $this->http_call( 'GET', '/templates/'. $ref .'/template_records/'. $id );
+    return $resule['dns_template_record']['id'] ? $result['dns_template_record'] : false;
   }
 
   // Create DNS template record
@@ -95,8 +94,7 @@ class DNSimple
       $vars['dns_template_record['. $k .']'] = $v;
     }
 
-    $rec = $this->http_call( 'POST', '/templates/'. $ref .'/template_records', $vars );
-    return $rec;
+    return $this->http_call( 'POST', '/templates/'. $ref .'/template_records', $vars );
   }
 
 
@@ -109,14 +107,14 @@ class DNSimple
     {
       $vars[ 'record['. $k .']' ] = $v;
     }
-    $res = $this->http_call( 'PUT', '/domains/'. $domain .'/records/'. $id, $vars );
-    return $res['record']['id'] ? $res['record'] : false;
+    $result = $this->http_call( 'PUT', '/domains/'. $domain .'/records/'. $id, $vars );
+    return $result['record']['id'] ? $result['record'] : false;
   }
 
   // Delete DNS record
   final public function dns_delete( $domain, $id )
   {
-    $del = $this->http_call( 'DELETE', '/domains/'. $domain .'/records/'. $id );
+    $this->http_call( 'DELETE', '/domains/'. $domain .'/records/'. $id );
     return $this->http['success'] == 'yes' ? true : false;
   }
 
@@ -129,8 +127,8 @@ class DNSimple
     {
       $vars[ 'record['. $k .']' ] = $v;
     }
-    $res = $this->http_call( 'POST', '/domains/'. $domain .'/records', $vars );
-    return $res['record']['id'] ? $res['record'] : false;
+    $result = $this->http_call( 'POST', '/domains/'. $domain .'/records', $vars );
+    return $result['record']['id'] ? $result['record'] : false;
   }
 
   // List DNS records for domain
@@ -166,9 +164,9 @@ class DNSimple
     {
       foreach( $contacts as $ck => $cd )
       {
-        $res[ $cd['contact']['id'] ] = $cd['contact'];
+        $result[ $cd['contact']['id'] ] = $cd['contact'];
       }
-      return $res;
+      return $result;
     }
     return false;
   }
@@ -190,8 +188,8 @@ class DNSimple
     {
       $array['contact['. $k .']'] = $v;
     }
-    $c = $this->http_call( 'POST', '/contacts', $array );
-    return $c['contact']['id'] ? $c['contact'] : false;
+    $result = $this->http_call( 'POST', '/contacts', $array );
+    return $result['contact']['id'] ? $result['contact'] : false;
   }
 
   // Update contact
@@ -208,7 +206,7 @@ class DNSimple
   // Delete contact
   final public function contacts_delete( $id )
   {
-    $c = $this->http_call( 'DELETE', '/contacts/'. $id );
+    $this->http_call( 'DELETE', '/contacts/'. $id );
     return $this->http['success'] == 'yes' ? true : false;
   }
 
@@ -257,13 +255,13 @@ class DNSimple
 
   final public function domains_transfer( $domain, $contactID, $authcode=false )
   {
-    $a['domain[name]'] = $domain;
-    $a['domain[registrant_id]'] = $contactID;
+    $arr['domain[name]'] = $domain;
+    $arr['domain[registrant_id]'] = $contactID;
     if( $authcode )
     {
-      $a['domain[auth_info]'] = $authcode;
+      $arr['domain[auth_info]'] = $authcode;
     }
-    $domain = $this->http_call( 'POST', '/domain_transfers', $a );
+    $domain = $this->http_call( 'POST', '/domain_transfers', $arr );
     return $domain;
   }
 
@@ -277,17 +275,17 @@ class DNSimple
   // Create domain
   final public function domains_create( $domain )
   {
-    $c = $this->http_call( 'POST', '/domains', array(
+    $res = $this->http_call( 'POST', '/domains', array(
       'domain[name]' => $domain
     ));
 
-    return $c['domain']['id'] ? $c['domain'] : false;
+    return $res['domain']['id'] ? $res['domain'] : false;
   }
 
   // Delete domain
   final public function domains_delete( $domain )
   {
-    $c = $this->http_call( 'DELETE', '/domains/'. $domain );
+    $this->http_call( 'DELETE', '/domains/'. $domain );
     return $this->http['success'] == 'yes' ? true : false;
   }
 
@@ -422,8 +420,8 @@ class DNSimple
       case 'POST':
       case 'PUT':
       case 'DELETE':
-        $a[CURLOPT_POST] = true;
-        $a[CURLOPT_POSTFIELDS] = $vars;
+        $opts[CURLOPT_POST] = true;
+        $opts[CURLOPT_POSTFIELDS] = $vars;
       break;
       
       case 'GET':
