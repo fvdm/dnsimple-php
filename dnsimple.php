@@ -361,6 +361,25 @@ class DNSimple
   }
 
 
+  // NAME SERVERS
+
+	/**
+	 * get list of name servers for a domain
+	 *
+	 * @param $domain string, integer, or domain array
+	 *
+	 * @return array
+	 */
+  final public function name_servers_list( $domain )
+  {
+    if ( is_array( $domain ) ) {
+      $domain = $domain['name'];
+    }
+    $name_servers = $this->http_call( 'GET', '/domains/' . $domain . '/name_servers' );
+    return $name_servers;
+  }
+
+
   // UTILITIES
 
   // curl header callback
